@@ -1,11 +1,18 @@
 import { FC, useState, useMemo } from 'react';
 import Layout from '@/components/layout/Layout';
-import { useRouter } from 'next/router';
 import { useContract } from '@/context/ContractContext';
 import { getTokenName } from '@/context/ContractContext';
 import Image from 'next/image';
 
-interface Bid {
+interface ContractBid {
+  bidder: string;
+  amount: string;
+  token: string;
+  timestamp: number;
+  isActive: boolean;
+}
+
+interface DisplayBid {
   bidder: string;
   amount: string;
   token: string;
@@ -20,7 +27,7 @@ interface Order {
     image: string;
     estimatedValueInUsd: string;
   };
-  bids: Bid[];
+  bids: DisplayBid[];
 }
 
 const OrdersPage: FC = () => {
@@ -33,9 +40,8 @@ const OrdersPage: FC = () => {
     return `${address.slice(0, 4)}...${address.slice(-4)}`;
   };
 
-  const getBidStatus = (bid: any): Bid['status'] => {
-    if (bid.state === 1) return 'Revoked';
-    if (bid.state === 2) return 'Cancelled';
+  const getBidStatus = (bid: ContractBid): DisplayBid['status'] => {
+    if (!bid.isActive) return 'Revoked';
     return 'Active';
   };
 
@@ -64,7 +70,7 @@ const OrdersPage: FC = () => {
     });
   }, [activeSales, gems, saleBids]);
 
-  const getBidStatusClass = (status: Bid['status']) => {
+  const getBidStatusClass = (status: DisplayBid['status']) => {
     switch (status) {
       case 'Active':
         return 'bg-green-50 text-green-700';

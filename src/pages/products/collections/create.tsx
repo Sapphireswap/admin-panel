@@ -1,7 +1,6 @@
 import { FC, useState } from 'react';
 import Layout from '@/components/layout/Layout';
 import { useForm } from 'react-hook-form';
-import Image from 'next/image';
 
 interface CollectionForm {
   title: string;
@@ -10,7 +9,7 @@ interface CollectionForm {
 }
 
 const CreateCollectionPage: FC = () => {
-  const { register, handleSubmit, watch } = useForm<CollectionForm>();
+  const { register, handleSubmit } = useForm<CollectionForm>();
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
 
   const mockProducts = [
